@@ -1,6 +1,8 @@
 # awsselect
 S3 Select offered by AWS allows easy access to data in S3. It is a feature that enables users to retrieve a subset of data from S3 using simple SQL expressions. S3 is a large datastore that stores TBs of data. Without S3 Select, you would need to fetch all files in your application to process. However, with S3 Select, you can use a simple SQL expression to fetch only the data from the files you need in filtered and structured form instead of retrieving the entire object.
 
+![aws s3 select](https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2017/11/28/s3_select.png)
+
 awsselect is a pyton wrapper which has been developed using aws python sdk where user just need pass certain parameter to access data.
 
 # Quick Start
