@@ -33,26 +33,22 @@ parser=argparse.ArgumentParser()
 
 parser.add_argument('--bucket_name', help='S3 bucket name')
 parser.add_argument('--file_name', help='filename')
-parser.add_argument('--select_col', help='comma separated column list with s. as prefix with every column name e.g s.empid')
-parser.add_argument('--filter_condition', help='filter condition like  e.g s.empid \> \'2\'')
+parser.add_argument('--columnStr', help='comma seprated string of output columns e.g- empid,salary')
+parser.add_argument('--sql_query', help='sql query')
+parser.add_argument('--output_file', help='output file name e.g- output and file will be created as output.zip')
 args=parser.parse_args()
 
 #  start client with s3
 s3 = boto3.client('s3')
-
-# column selection
-columStr=args.select_col
-
-#filter condition
-filter=args.filter_condition
 
 #  define file location and name
 bucket_name = args.bucket_name
 filename = args.file_name
 
 #  create SQL expression to query by date using column names
-sql_exp = ("SELECT "+columStr+" FROM s3object s where "+filter) 
-
+#sql_exp = ("SELECT "+columStr+" FROM s3object s where "+filter) 
+sql_exp = args.sql_query 
+print(sql_exp)
 #  should we use header names to filter
 #use_header = True
 
@@ -61,8 +57,9 @@ file_str = query_csv_s3(s3, bucket_name, filename, sql_exp)
 print(file_str)
 
 #create column list
-colList=columStr.replace("s.","").split()
+colList=args.columnStr.split(",")
 df = pd.read_csv(io.StringIO(file_str), names=colList)
 print(df)
-
+compression_opts = dict(method='zip',archive_name=args.output_file+'.csv')  
+df.to_csv(args.output_file+'.zip', index=False,compression=compression_opts)  
 
